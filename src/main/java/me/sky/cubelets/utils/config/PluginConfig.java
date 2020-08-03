@@ -5,11 +5,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class InstancedConfig extends Config {
+public class PluginConfig extends Config {
 
     private final Plugin plugin;
 
-    public InstancedConfig(String fileName, Plugin plugin) {
+    public PluginConfig(String fileName, Plugin plugin) {
         super("plugins/" + plugin.getName(), fileName, plugin);
         this.plugin = plugin;
         create();
