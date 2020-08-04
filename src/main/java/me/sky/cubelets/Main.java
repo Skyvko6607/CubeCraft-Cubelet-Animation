@@ -1,6 +1,8 @@
 package me.sky.cubelets;
 
 import com.google.gson.Gson;
+import me.sky.cubelets.commands.CubeCommand;
+import me.sky.cubelets.commands.list.CubeletCommand;
 import me.sky.cubelets.cubelet.CubeletsManager;
 import me.sky.cubelets.database.Database;
 import me.sky.cubelets.database.SQLTableCreate;
@@ -23,13 +25,21 @@ public class Main extends JavaPlugin implements ICubeletsPlugin {
     public void onEnable() {
         this.random = new Random();
         this.gson = new Gson();
-        this.database = new Database(this);
-        runDatabaseCheck();
         new IMenuHandler(this);
         this.settings = new PluginConfig("config.yml", this);
         this.messages = new PluginConfig("messages.yml", this);
         this.databaseSettings = new PluginConfig("database-settings.yml", this);
+        this.database = new Database(this);
+        runDatabaseCheck();
         this.cubeletsManager = new CubeletsManager(this);
+        registerCommands(new CubeletCommand("cubelet", this));
+
+    }
+
+    private void registerCommands(CubeCommand... commands) {
+        for (CubeCommand cmd : commands) {
+            getCommand(cmd.getCommand()).setExecutor(cmd);
+        }
     }
 
     private void runDatabaseCheck() {

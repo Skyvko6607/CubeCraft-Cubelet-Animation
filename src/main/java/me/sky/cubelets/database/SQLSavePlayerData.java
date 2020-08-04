@@ -19,9 +19,9 @@ public class SQLSavePlayerData extends SQLScheduler<PlayerData> {
             statement.setString(1, data.getUuid().toString());
             ResultSet result = statement.executeQuery();
             if (result != null && result.next()) {
-                updateData(data, connection, table);
+                updateData(data, connection, table, plugin);
             } else {
-                createData(data, connection, table);
+                createData(data, connection, table, plugin);
             }
             statement.close();
             if (result != null) {
@@ -32,16 +32,16 @@ public class SQLSavePlayerData extends SQLScheduler<PlayerData> {
         }
     }
 
-    private void createData(PlayerData data, Connection connection, String table) throws SQLException {
+    private void createData(PlayerData data, Connection connection, String table, ICubeletsPlugin plugin) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(String.format("INSERT INTO `%s` (`UUID`, `Cubeletes`) VALUES (?, ?)", table));
         statement.setString(1, data.getUuid().toString());
-        statement.setArray(2, connection.createArrayOf("TINYTEXT", convertCubeletesData(data.getData())));
+        statement.setString(2, plugin.getGson().toJson(convertCubeletesData(data.getData())));
         statement.executeUpdate();
     }
 
-    private void updateData(PlayerData data, Connection connection, String table) throws SQLException {
+    private void updateData(PlayerData data, Connection connection, String table, ICubeletsPlugin plugin) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(String.format("UPDATE `%s` SET Cubeletes=? WHERE UUID=?", table));
-        statement.setArray(1, connection.createArrayOf("TINYTEXT", convertCubeletesData(data.getData())));
+        statement.setString(1, plugin.getGson().toJson(convertCubeletesData(data.getData())));
         statement.setString(2, data.getUuid().toString());
         statement.executeUpdate();
     }

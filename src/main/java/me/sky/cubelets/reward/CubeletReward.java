@@ -13,6 +13,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class CubeletReward {
 
+    public enum RewardType {
+        ITEM,
+        PERMISSION,
+        COSMETIC,
+        CUBELET
+    }
+
     private final ICubeletsPlugin plugin;
     private final String name;
     private final ItemStack item;

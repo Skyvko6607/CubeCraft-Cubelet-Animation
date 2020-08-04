@@ -1,0 +1,6 @@
+IP: localhost
+Port: 3306
+Database: cubecraft
+Username: user
+Password: jhj344
+PlayerData-Table: player_data

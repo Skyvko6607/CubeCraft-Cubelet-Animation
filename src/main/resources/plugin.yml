@@ -1,4 +1,11 @@
 name: CubeCraftCubelets
-version: ${project.version}
+main: me.sky.cubelets.Main
+version: 0.1
 api-version: 1.13
 author: Skyvko6607
+commands:
+  cubelet:
+    aliases:
+      - cubelets
+    permission: cubecraft.command.cubelet
+    description: Admin command for using the plugin.

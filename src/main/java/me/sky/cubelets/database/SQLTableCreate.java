@@ -9,7 +9,7 @@ public class SQLTableCreate extends SQLScheduler<String> {
     @Override
     public void run(String table, Connection connection, ICubeletsPlugin plugin) {
         try {
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS bd.`" + table + "` (`UUID` TEXT DEFAULT NULL, `Cubelets` ARRAY[int])").execute();
+            connection.prepareStatement(String.format("CREATE TABLE IF NOT EXISTS `%s` (`UUID` TEXT DEFAULT NULL, `Cubelets` LONGTEXT)", table)).execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

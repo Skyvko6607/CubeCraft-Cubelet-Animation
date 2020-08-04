@@ -3,6 +3,7 @@ package me.sky.cubelets.cubelet;
 import me.sky.cubelets.ICubeletsPlugin;
 import me.sky.cubelets.Manager;
 import me.sky.cubelets.cubelet.objects.Cubelet;
+import me.sky.cubelets.cubelet.types.SummerCubelet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class CubeletsManager extends Manager<ICubeletsPlugin> {
 
     public CubeletsManager(ICubeletsPlugin plugin) {
         super(plugin);
+        cubelets.add(new SummerCubelet(plugin));
     }
 
     public Cubelet getCubeletById(String id) {

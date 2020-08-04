@@ -1,6 +1,7 @@
 package me.sky.cubelets.utils;
 
 import net.md_5.bungee.api.ChatColor;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,5 +42,10 @@ public class MinecraftUtils {
             yaw = Float.parseFloat(s[5]);
         }
         return new Location(world, x, y, z, yaw, pitch);
+    }
+
+    public static String centerText(String text) {
+        int maxWidth = 80, spaces = (int) Math.round((maxWidth - 1.4 * ChatColor.stripColor(text).length()) / 2);
+        return StringUtils.repeat(" ", spaces) + text;
     }
 }
