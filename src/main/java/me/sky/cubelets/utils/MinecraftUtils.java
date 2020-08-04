@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -47,5 +49,14 @@ public class MinecraftUtils {
     public static String centerText(String text) {
         int maxWidth = 80, spaces = (int) Math.round((maxWidth - 1.4 * ChatColor.stripColor(text).length()) / 2);
         return StringUtils.repeat(" ", spaces) + text;
+    }
+
+    public static void scheduleLater(ITaskSchedule taskSchedule, int delay, Plugin plugin) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                taskSchedule.run();
+            }
+        }.runTaskLater(plugin, delay);
     }
 }

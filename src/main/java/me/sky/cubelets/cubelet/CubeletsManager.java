@@ -3,7 +3,7 @@ package me.sky.cubelets.cubelet;
 import me.sky.cubelets.ICubeletsPlugin;
 import me.sky.cubelets.Manager;
 import me.sky.cubelets.cubelet.objects.Cubelet;
-import me.sky.cubelets.cubelet.types.SummerCubelet;
+import me.sky.cubelets.cubelet.types.summer.SummerCubelet;
 
 import java.util.ArrayList;
 import java.util.List;

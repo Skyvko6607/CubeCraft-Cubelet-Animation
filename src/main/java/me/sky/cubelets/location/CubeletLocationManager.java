@@ -13,6 +13,10 @@ public class CubeletLocationManager extends Manager<ICubeletsPlugin> {
 
     public CubeletLocationManager(ICubeletsPlugin plugin) {
         super(plugin);
+        plugin.getSettings().getConfig().getConfigurationSection("OpeningLocations").getKeys(false).forEach(s -> {
+            CubeletLocation cubeletLocation = new CubeletLocation(s, plugin.getSettings().getConfig().getString("OpeningLocations." + s), plugin);
+            locations.put(cubeletLocation.getLocation().getBlock(), cubeletLocation);
+        });
     }
 
     public Map<Block, CubeletLocation> getLocations() {
