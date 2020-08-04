@@ -1,7 +1,9 @@
-package me.sky.cubelets.cubelet.animation.summer.objects;
+package me.sky.cubelets.cubelet.animation.halloween.objects.snake;
 
 import me.sky.cubelets.ICubeletsPlugin;
 import me.sky.cubelets.cubelet.objects.Cubelet;
+import me.sky.cubelets.utils.Laser;
+import me.sky.cubelets.utils.MinecraftUtils;
 import me.sky.cubelets.utils.particle.ParticleEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,6 +18,7 @@ import org.bukkit.util.Vector;
 public class SnakeEntity {
     private final ICubeletsPlugin plugin;
     private final ArmorStand[] armorStands = new ArmorStand[16];
+    private Laser laser;
 
     public SnakeEntity(Cubelet cubelet, Location loc, ICubeletsPlugin plugin) {
         this.plugin = plugin;
@@ -33,7 +36,14 @@ public class SnakeEntity {
         }
     }
 
-    public void spawn(Vector[] path, ISnakeComplete snakeComplete) {
+    public void spawn(ArmorStand box, Vector[] path, ISnakeComplete snakeComplete) {
+        try {
+            laser = new Laser(armorStands[0].getLocation().add(0, armorStands[0].getHeight(), 0),
+                    box.getLocation().add(0, box.getHeight(), 0), -1, 30);
+            laser.start(plugin);
+        } catch (ReflectiveOperationException e) {
+        }
+
         new BukkitRunnable() {
             int index = 0;
 
@@ -41,6 +51,7 @@ public class SnakeEntity {
             public void run() {
                 if (!armorStands[0].isValid()) {
                     this.cancel();
+                    laser.stop();
                     return;
                 }
                 if (armorStands[0].getLocation().distance(path[index].toLocation(armorStands[0].getWorld())) <= 0.25f) {
@@ -51,21 +62,33 @@ public class SnakeEntity {
                         armorStand.remove();
                     }
                     this.cancel();
+                    laser.stop();
                     snakeComplete.complete();
                     return;
                 }
+                Location standLoc = armorStands[0].getLocation().clone().add(0, armorStands[0].getHeight(), 0);
+                if (box.isValid()) {
+                    try {
+                        laser.callColorChange();
+                        laser.moveStart(standLoc);
+                    } catch (ReflectiveOperationException e) {
+                    }
+                }
                 for (int i = 0; i < armorStands.length; i++) {
                     ArmorStand armorStand = armorStands[i];
-                    ParticleEffect.FLAME.display(armorStand.getLocation(), 0.15f, 0.15f, 0.15f, 0, 2, null, Bukkit.getOnlinePlayers());
                     if (i == 0) {
-                        lookAtLocation(armorStand, path[index].toLocation(armorStands[0].getWorld()));
+                        MinecraftUtils.lookAtLocation(armorStand, path[index].toLocation(armorStands[0].getWorld()));
                         armorStand.teleport(armorStand.getLocation().add(armorStand.getLocation().getDirection().multiply(0.25)));
                         continue;
+                    }
+                    if (i % 2 == 0) {
+                        ParticleEffect.SMOKE_LARGE.display(armorStand.getLocation().clone().add(0, armorStand.getHeight() / 2, 0),
+                                0.15f, 0.15f, 0.15f, 0, 1, null, Bukkit.getOnlinePlayers());
                     }
                     if (armorStand.getLocation().distance(armorStands[i - 1].getLocation()) <= 0.35f) {
                         continue;
                     }
-                    lookAtEntity(armorStand, armorStands[i - 1]);
+                    MinecraftUtils.lookAtLocation(armorStand, armorStands[i - 1].getLocation());
                     armorStand.teleport(armorStand.getLocation().add(armorStand.getLocation().getDirection().multiply(0.25)));
                 }
             }
@@ -89,23 +112,6 @@ public class SnakeEntity {
         armorStand.getEquipment().setHelmet(new ItemStack(Material.BLACK_CONCRETE));
         armorStand.addScoreboardTag("CubeletEntity");
         return armorStand;
-    }
-
-    private void lookAtLocation(Entity source, Location target) {
-        Vector direction = getVector(source).subtract(target.toVector()).normalize();
-        double x = direction.getX();
-        double y = direction.getY();
-        double z = direction.getZ();
-
-        Location changed = source.getLocation().clone();
-        changed.setYaw(180 - toDegree(Math.atan2(x, z)));
-        changed.setPitch(90 - toDegree(Math.acos(y)));
-        source.setRotation(changed.getYaw(), changed.getPitch());
-        ((ArmorStand) source).setHeadPose(new EulerAngle(Math.toRadians(changed.getPitch()), ((ArmorStand) source).getHeadPose().getY(), 0));
-    }
-
-    private void lookAtEntity(Entity source, Entity target) {
-        lookAtLocation(source, target.getLocation());
     }
 
     private float toDegree(double angle) {

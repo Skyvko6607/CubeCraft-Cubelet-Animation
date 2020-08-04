@@ -50,6 +50,9 @@ public class CubeletMenu implements IMenu {
         if (!cubeletMap.containsKey(slot)) {
             return;
         }
+        if (cubeletLocation.isOpening()) {
+            return;
+        }
         cubeletMap.get(slot).start(player, cubeletLocation);
         player.closeInventory();
     }

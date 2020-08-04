@@ -1,4 +1,4 @@
-package me.sky.cubelets.cubelet.animation.summer.list;
+package me.sky.cubelets.cubelet.animation.halloween.list;
 
 import me.sky.cubelets.ICubeletsPlugin;
 import me.sky.cubelets.cubelet.animation.handler.CubeletAnimation;
@@ -28,8 +28,13 @@ public class ArcParticle extends CubeletAnimationPart {
 
     @Override
     public void update() {
-        particles.forEach(location -> ParticleEffect.REDSTONE.display(location, new RegularColor(255, 0, 0), Bukkit.getOnlinePlayers()));
-        if (angle >= 90) {
+        ParticleEffect.FLAME.display(getCubeletLocation().getLocation(), 1, 0, 1, 0, 3, null, Bukkit.getOnlinePlayers());
+//        ParticleEffect.ENCHANTMENT_TABLE.display(getCubeletLocation().getLocation().clone().add(0, 1, 0), 0, 0, 0, 1, 5, null, Bukkit.getOnlinePlayers());
+        particles.forEach(location -> {
+            RegularColor color = particles.indexOf(location) % 2 == 0 ? new RegularColor(255, 180, 0) : new RegularColor(0, 0, 0);
+            ParticleEffect.REDSTONE.display(location, color, Bukkit.getOnlinePlayers());
+        });
+        if (angle > 90) {
             finish();
             return;
         }
@@ -37,7 +42,7 @@ public class ArcParticle extends CubeletAnimationPart {
         particles.add(getParticleLocation(-1, 1));
         particles.add(getParticleLocation(1, -1));
         particles.add(getParticleLocation(-1, -1));
-        angle += 4;
+        angle += 8;
     }
 
     @Override
@@ -51,7 +56,7 @@ public class ArcParticle extends CubeletAnimationPart {
     }
 
     private Location getParticleLocation(int x, int z) {
-        final Location loc = getCubeletLocation().getLocation().clone().add(0, 1, 0);
+        Location loc = getCubeletLocation().getLocation().clone().add(0, 1, 0);
         double size = 2.5;
         loc.setX(loc.getX() + x * (Math.cos(Math.toRadians(angle)) * size));
         loc.setZ(loc.getZ() + z * (Math.cos(Math.toRadians(angle)) * size));

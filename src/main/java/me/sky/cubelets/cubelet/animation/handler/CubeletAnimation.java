@@ -40,6 +40,15 @@ public abstract class CubeletAnimation {
         animIndex++;
     }
 
+    public <T extends CubeletAnimationPart> T getAnimationByClass(Class<T> classFile) {
+        for (CubeletAnimationPart part : animationParts) {
+            if (part.getClass().isAssignableFrom(classFile)) {
+                return (T) part;
+            }
+        }
+        return null;
+    }
+
     public Cubelet getCubelet() {
         return cubelet;
     }

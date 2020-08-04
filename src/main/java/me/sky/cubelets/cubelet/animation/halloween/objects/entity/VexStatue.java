@@ -1,4 +1,4 @@
-package me.sky.cubelets.cubelet.animation.summer.objects;
+package me.sky.cubelets.cubelet.animation.halloween.objects.entity;
 
 import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Location;
@@ -13,8 +13,6 @@ public class VexStatue extends EntityVex {
         this.loc = loc;
         setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
         setInvulnerable(true);
-        setCustomName(new ChatComponentText("§0§l§kCUBECRAFT"));
-        setCustomNameVisible(true);
         setSilent(true);
         setNoGravity(true);
         addScoreboardTag("CubeletEntity");

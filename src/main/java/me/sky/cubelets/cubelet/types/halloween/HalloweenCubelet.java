@@ -1,7 +1,7 @@
-package me.sky.cubelets.cubelet.types.summer;
+package me.sky.cubelets.cubelet.types.halloween;
 
 import me.sky.cubelets.ICubeletsPlugin;
-import me.sky.cubelets.cubelet.animation.summer.SummerCubeletAnimation;
+import me.sky.cubelets.cubelet.animation.halloween.HalloweenCubeletAnimation;
 import me.sky.cubelets.cubelet.objects.Cubelet;
 import me.sky.cubelets.cubelet.objects.CubeletRarity;
 import me.sky.cubelets.location.CubeletLocation;
@@ -9,19 +9,19 @@ import org.bukkit.entity.Player;
 
 import java.util.concurrent.TimeUnit;
 
-public class SummerCubelet extends Cubelet {
-    public SummerCubelet(ICubeletsPlugin plugin) {
+public class HalloweenCubelet extends Cubelet {
+    public HalloweenCubelet(ICubeletsPlugin plugin) {
         super(plugin);
     }
 
     @Override
     public String getId() {
-        return "summer";
+        return "halloween";
     }
 
     @Override
     public String getHeadTexture() {
-        return "5a5ab05ea254c32e3c48f3fdcf9fd9d77d3cba04e6b5ec2e68b3cbdcfac3fd";
+        return "a6cc486c2be1cb9dfcb2e53dd9a3e9a883bfadb27cb956f1896d602b4067";
     }
 
     @Override
@@ -42,6 +42,6 @@ public class SummerCubelet extends Cubelet {
     @Override
     public void start(Player player, CubeletLocation cubeletLocation) {
         super.start(player, cubeletLocation);
-        new SummerCubeletAnimation(this, player, cubeletLocation, getPlugin()).playNext();
+        new HalloweenCubeletAnimation(this, player, cubeletLocation, getPlugin()).playNext();
     }
 }

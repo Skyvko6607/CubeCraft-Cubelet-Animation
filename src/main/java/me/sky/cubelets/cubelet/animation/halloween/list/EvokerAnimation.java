@@ -1,12 +1,12 @@
-package me.sky.cubelets.cubelet.animation.summer.list;
+package me.sky.cubelets.cubelet.animation.halloween.list;
 
 import me.sky.cubelets.ICubeletsPlugin;
 import me.sky.cubelets.cubelet.animation.handler.CubeletAnimation;
 import me.sky.cubelets.cubelet.animation.handler.CubeletAnimationPart;
-import me.sky.cubelets.utils.ITaskSchedule;
-import me.sky.cubelets.cubelet.animation.summer.objects.EvocationEntity;
-import me.sky.cubelets.cubelet.animation.summer.objects.VexStatue;
+import me.sky.cubelets.cubelet.animation.halloween.objects.entity.EvocationEntity;
+import me.sky.cubelets.cubelet.animation.halloween.objects.entity.VexStatue;
 import me.sky.cubelets.location.CubeletLocation;
+import me.sky.cubelets.utils.MinecraftUtils;
 import me.sky.cubelets.utils.particle.ParticleEffect;
 import net.minecraft.server.v1_16_R1.BlockPosition;
 import net.minecraft.server.v1_16_R1.EntityIllagerWizard;
@@ -20,18 +20,21 @@ import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 
-public class ChestAnimation extends CubeletAnimationPart {
+public class EvokerAnimation extends CubeletAnimationPart {
     private final EvocationEntity[] evokers = new EvocationEntity[4];
     private final VexStatue[] statues = new VexStatue[4];
+    private boolean opened = false;
 
-    public ChestAnimation(CubeletAnimation animation, Player player, CubeletLocation cubeletLocation, ICubeletsPlugin plugin) {
+    public EvokerAnimation(CubeletAnimation animation, Player player, CubeletLocation cubeletLocation, ICubeletsPlugin plugin) {
         super(animation, player, cubeletLocation, plugin);
     }
 
     @Override
     public void start() {
         super.start();
+        getCubeletLocation().getLocation().getWorld().playSound(getCubeletLocation().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.5f, 0);
         getCubeletLocation().getLocation().getBlock().setType(Material.ENDER_CHEST);
         Block block = getCubeletLocation().getLocation().getBlock();
         World serverWorld = ((CraftWorld) block.getWorld()).getHandle();
@@ -47,18 +50,27 @@ public class ChestAnimation extends CubeletAnimationPart {
             public void run() {
                 block.getWorld().playSound(block.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 1, 0);
                 serverWorld.playBlockAction(pos, serverWorld.getType(pos).getBlock(), 1, 1);
-                for (EvocationEntity evocationEntity : evokers) {
-                    evocationEntity.playAnimation(EntityIllagerWizard.Spell.SUMMON_VEX);
-                }
                 ParticleEffect.SMOKE_LARGE.display(block.getLocation().add(0.5, 1, 0.5), 0, 1, 0, 0.25f, 20, null, Bukkit.getOnlinePlayers());
-                scheduleLater(() -> finish(), 20);
+                opened = true;
+                BoxSpawn boxSpawn = getCubeletAnimation().getAnimationByClass(BoxSpawn.class);
+                Location loc = MinecraftUtils.getLookAtLocation(boxSpawn.getBox(), getPlayer().getEyeLocation());
+                boxSpawn.getBox().setHeadPose(new EulerAngle(0, 0, 0));
+                boxSpawn.getBox().setRotation(loc.getYaw(), 0);
+                MinecraftUtils.scheduleLater(() -> {
+                    for (EvocationEntity evocationEntity : evokers) {
+                        evocationEntity.playAnimation(EntityIllagerWizard.Spell.SUMMON_VEX);
+                    }
+                    finish();
+                }, 20, getPlugin());
             }
-        }.runTaskLater(getPlugin(), 40);
+        }.runTaskLater(getPlugin(), 80);
     }
 
     @Override
     public void update() {
-
+        for (EvocationEntity entity : evokers) {
+            ParticleEffect.SMOKE_NORMAL.display(entity.getBukkitEntity().getLocation(), 0, 0, 0, 0.05f, 3, null, Bukkit.getOnlinePlayers());
+        }
     }
 
     @Override
@@ -73,16 +85,11 @@ public class ChestAnimation extends CubeletAnimationPart {
 
     @Override
     public int getUpdateTime() {
-        return 0;
+        return 4;
     }
 
-    private void scheduleLater(ITaskSchedule taskSchedule, int delay) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                taskSchedule.run();
-            }
-        }.runTaskLater(getPlugin(), delay);
+    public boolean isOpened() {
+        return opened;
     }
 
     private void spawnEvokers() {

@@ -5,8 +5,10 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -58,5 +60,22 @@ public class MinecraftUtils {
                 taskSchedule.run();
             }
         }.runTaskLater(plugin, delay);
+    }
+
+    public static void lookAtLocation(Entity source, Location target) {
+        Location changed = getLookAtLocation(source, target);
+        source.setRotation(changed.getYaw(), changed.getPitch());
+    }
+
+    public static Location getLookAtLocation(Entity source, Location target) {
+        Vector direction = source.getLocation().toVector().subtract(target.toVector()).normalize();
+        double x = direction.getX();
+        double y = direction.getY();
+        double z = direction.getZ();
+
+        Location changed = source.getLocation().clone();
+        changed.setYaw(180 - (float) Math.toDegrees(Math.atan2(x, z)));
+        changed.setPitch(90 - (float) Math.toDegrees(Math.acos(y)));
+        return changed;
     }
 }
