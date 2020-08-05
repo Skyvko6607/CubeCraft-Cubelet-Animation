@@ -28,13 +28,9 @@ public abstract class Cubelet {
     }
 
     public abstract String getId();
-
     public abstract String getHeadTexture();
-
     public abstract CubeletRarity getRarity();
-
     public abstract int[] getLootPoints();
-
     public abstract long getExpiration();
 
     public void start(Player player, CubeletLocation cubeletLocation) {

@@ -21,7 +21,7 @@ public class FireworkParticle extends CubeletAnimationPart {
     @Override
     public void start() {
         super.start();
-        getCubeletLocation().getLocation().getWorld().spawn(getCubeletLocation().getLocation(), EvokerFangs.class);
+        getCubeletLocation().getLocation().getWorld().spawn(getCubeletLocation().getLocation(), EvokerFangs.class).addScoreboardTag("CubeletEntity");
         MinecraftUtils.scheduleLater(this::finish, 10, getPlugin());
     }
 
@@ -38,14 +38,37 @@ public class FireworkParticle extends CubeletAnimationPart {
     @Override
     public void finish() {
         super.finish();
+        spawnBigFirework(getCubeletLocation().getLocation().clone().add(0, 1, 0));
+        spawnSmallFirework(getStatueLocation(getCubeletLocation().getLocation(), 1, 1));
+        spawnSmallFirework(getStatueLocation(getCubeletLocation().getLocation(), -1, 1));
+        spawnSmallFirework(getStatueLocation(getCubeletLocation().getLocation(), -1, -1));
+        spawnSmallFirework(getStatueLocation(getCubeletLocation().getLocation(), 1, -1));
+    }
+
+    private Location getStatueLocation(Location center, int x, int z) {
+        return center.clone().add(x * 2, 1, z * 2);
+    }
+
+    private void spawnBigFirework(Location loc) {
         FireworkEffect effect = FireworkEffect.builder().withColor(Color.AQUA, Color.WHITE).withFade(Color.RED).with(FireworkEffect.Type.STAR).build();
-        Location loc = getCubeletLocation().getLocation().clone().add(0, 1, 0);
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta meta = firework.getFireworkMeta();
         meta.setPower(0);
         meta.addEffect(effect);
         firework.setFireworkMeta(meta);
         firework.detonate();
+        firework.addScoreboardTag("CubeletEntity");
+    }
+
+    private void spawnSmallFirework(Location loc) {
+        FireworkEffect effect = FireworkEffect.builder().withColor(Color.RED, Color.YELLOW).withFade(Color.RED).with(FireworkEffect.Type.BALL).build();
+        Firework firework = loc.getWorld().spawn(loc, Firework.class);
+        FireworkMeta meta = firework.getFireworkMeta();
+        meta.setPower(0);
+        meta.addEffect(effect);
+        firework.setFireworkMeta(meta);
+        firework.detonate();
+        firework.addScoreboardTag("CubeletEntity");
     }
 
     @Override

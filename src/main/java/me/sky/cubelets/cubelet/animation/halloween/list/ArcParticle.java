@@ -29,7 +29,6 @@ public class ArcParticle extends CubeletAnimationPart {
     @Override
     public void update() {
         ParticleEffect.FLAME.display(getCubeletLocation().getLocation(), 1, 0, 1, 0, 3, null, Bukkit.getOnlinePlayers());
-//        ParticleEffect.ENCHANTMENT_TABLE.display(getCubeletLocation().getLocation().clone().add(0, 1, 0), 0, 0, 0, 1, 5, null, Bukkit.getOnlinePlayers());
         particles.forEach(location -> {
             RegularColor color = particles.indexOf(location) % 2 == 0 ? new RegularColor(255, 180, 0) : new RegularColor(0, 0, 0);
             ParticleEffect.REDSTONE.display(location, color, Bukkit.getOnlinePlayers());
@@ -42,9 +41,8 @@ public class ArcParticle extends CubeletAnimationPart {
         particles.add(getParticleLocation(-1, 1));
         particles.add(getParticleLocation(1, -1));
         particles.add(getParticleLocation(-1, -1));
-        angle += 8;
+        angle += 6;
     }
-
     @Override
     public void remove() {
 

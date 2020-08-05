@@ -7,14 +7,17 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
 
 public class EvocationEntity extends EntityEvoker {
+    private final Location loc;
     private final Location center;
 
     public EvocationEntity(Location loc, Location center) {
         super(EntityTypes.EVOKER, ((CraftWorld) loc.getWorld()).getHandle());
+        this.loc = loc;
         this.center = center;
         setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
         setInvulnerable(true);
         setSilent(true);
+        collides = false;
         addScoreboardTag("CubeletEntity");
     }
 

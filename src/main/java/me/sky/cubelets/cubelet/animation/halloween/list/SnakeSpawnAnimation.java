@@ -8,10 +8,14 @@ import me.sky.cubelets.location.CubeletLocation;
 import me.sky.cubelets.utils.MinecraftUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class SnakeSpawnAnimation extends CubeletAnimationPart {
+
+    private SnakeEntity[] snakes = new SnakeEntity[2];
 
     public SnakeSpawnAnimation(CubeletAnimation animation, Player player, CubeletLocation cubeletLocation, ICubeletsPlugin plugin) {
         super(animation, player, cubeletLocation, plugin);
@@ -22,18 +26,22 @@ public class SnakeSpawnAnimation extends CubeletAnimationPart {
         super.start();
         getCubeletLocation().getLocation().getWorld().playSound(getCubeletLocation().getLocation(), Sound.ENTITY_EVOKER_PREPARE_ATTACK, 0.5f, 1);
         Location spawn = getCubeletLocation().getLocation().clone().add(0, 1.35, 0);
-        SnakeEntity snakeEntity = new SnakeEntity(getCubeletAnimation().getCubelet(), spawn.clone(), getPlugin());
-        SnakeEntity snakeEntity2 = new SnakeEntity(getCubeletAnimation().getCubelet(), spawn.clone(), getPlugin());
+        snakes[0] = new SnakeEntity(getCubeletAnimation().getCubelet(), spawn.clone(), getPlugin());
+        snakes[1] = new SnakeEntity(getCubeletAnimation().getCubelet(), spawn.clone(), getPlugin());
         Vector[] path = getSnakePath(0, spawn.clone());
         Vector[] path2 = getSnakePath(180, spawn.clone());
         MinecraftUtils.scheduleLater(() -> getCubeletLocation().getLocation().getWorld().playSound(getCubeletLocation().getLocation(), Sound.ENTITY_VEX_CHARGE, 1, 0), 10, getPlugin());
-        snakeEntity.spawn(getCubeletAnimation().getAnimationByClass(BoxSpawn.class).getBox(), path, () -> { });
-        snakeEntity2.spawn(getCubeletAnimation().getAnimationByClass(BoxSpawn.class).getBox(), path2, this::finish);
+        snakes[0].spawn(getCubeletAnimation().getAnimationByClass(BoxSpawn.class).getBox(), path, () -> { });
+        snakes[1].spawn(getCubeletAnimation().getAnimationByClass(BoxSpawn.class).getBox(), path2, this::finish);
     }
 
     @Override
     public void update() {
-
+        World world = snakes[0].getArmorStands()[0].getWorld();
+        Entity ent1 = snakes[0].getArmorStands()[0];
+        Entity ent2 = snakes[1].getArmorStands()[0];
+        world.playSound(ent1.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 1);
+        world.playSound(ent2.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 0.5f, 1);
     }
 
     @Override
@@ -43,7 +51,7 @@ public class SnakeSpawnAnimation extends CubeletAnimationPart {
 
     @Override
     public int getUpdateTime() {
-        return 0;
+        return 5;
     }
 
     private Vector[] getSnakePath(int offset, Location location) {

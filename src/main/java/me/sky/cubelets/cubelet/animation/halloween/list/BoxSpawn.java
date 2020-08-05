@@ -45,6 +45,7 @@ public class BoxSpawn extends CubeletAnimationPart {
 
     @Override
     public void update() {
+//        ParticleEffect.FLAME.display(getCubeletLocation().getLocation(), 1, 0, 1, 0, 3, null, Bukkit.getOnlinePlayers());
         if (box == null || start == null) {
             return;
         }

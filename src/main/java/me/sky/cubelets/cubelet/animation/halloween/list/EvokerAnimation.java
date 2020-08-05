@@ -40,6 +40,7 @@ public class EvokerAnimation extends CubeletAnimationPart {
         World serverWorld = ((CraftWorld) block.getWorld()).getHandle();
         BlockPosition pos = new BlockPosition(block.getX(), block.getY(), block.getZ());
         block.getWorld().playSound(block.getLocation(), Sound.BLOCK_METAL_PLACE, 1, 1);
+        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_END_PORTAL_SPAWN, 0.25f, 1);
         spawnEvokers();
         for (EvocationEntity evocationEntity : evokers) {
             ParticleEffect.SMOKE_LARGE.display(evocationEntity.getBukkitEntity().getLocation().clone().add(0, 1, 0), 0, 1, 0, 0.25f, 20, null, Bukkit.getOnlinePlayers());

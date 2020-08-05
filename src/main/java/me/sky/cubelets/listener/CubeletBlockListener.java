@@ -22,6 +22,7 @@ public class CubeletBlockListener implements Listener {
             return;
         }
         if (plugin.getCubeletLocationManager().getLocations().containsKey(event.getClickedBlock())) {
+            event.setCancelled(true);
             CubeletLocation cubeletLocation = plugin.getCubeletLocationManager().getLocations().get(event.getClickedBlock());
             if (cubeletLocation.isOpening()) {
                 return;

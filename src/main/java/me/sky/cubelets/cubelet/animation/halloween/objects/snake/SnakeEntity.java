@@ -12,7 +12,6 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 public class SnakeEntity {
@@ -66,12 +65,12 @@ public class SnakeEntity {
                     snakeComplete.complete();
                     return;
                 }
-                Location standLoc = armorStands[0].getLocation().clone().add(0, armorStands[0].getHeight(), 0);
+                Location standLoc = armorStands[0].getLocation().clone().add(0, armorStands[0].getEyeHeight(), 0);
                 if (box.isValid()) {
                     try {
                         laser.callColorChange();
                         laser.moveStart(standLoc);
-                    } catch (ReflectiveOperationException e) {
+                    } catch (ReflectiveOperationException ignored) {
                     }
                 }
                 for (int i = 0; i < armorStands.length; i++) {
@@ -85,11 +84,12 @@ public class SnakeEntity {
                         ParticleEffect.SMOKE_LARGE.display(armorStand.getLocation().clone().add(0, armorStand.getHeight() / 2, 0),
                                 0.15f, 0.15f, 0.15f, 0, 1, null, Bukkit.getOnlinePlayers());
                     }
-                    if (armorStand.getLocation().distance(armorStands[i - 1].getLocation()) <= 0.35f) {
+                    if (armorStand.getLocation().add(0, armorStand.getEyeHeight(), 0)
+                            .distance(armorStands[i - 1].getLocation().add(0, armorStand.getEyeHeight(), 0)) <= 0.5f) {
                         continue;
                     }
                     MinecraftUtils.lookAtLocation(armorStand, armorStands[i - 1].getLocation());
-                    armorStand.teleport(armorStand.getLocation().add(armorStand.getLocation().getDirection().multiply(0.25)));
+                    armorStand.teleport(armorStand.getLocation().add(armorStand.getLocation().getDirection().multiply(0.45)));
                 }
             }
         }.runTaskTimer(plugin, 0, 1);
@@ -112,6 +112,10 @@ public class SnakeEntity {
         armorStand.getEquipment().setHelmet(new ItemStack(Material.BLACK_CONCRETE));
         armorStand.addScoreboardTag("CubeletEntity");
         return armorStand;
+    }
+
+    public ArmorStand[] getArmorStands() {
+        return armorStands;
     }
 
     private float toDegree(double angle) {
