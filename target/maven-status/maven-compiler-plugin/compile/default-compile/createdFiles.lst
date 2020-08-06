@@ -47,6 +47,7 @@ me\sky\cubelets\cubelet\animation\handler\CubeletAnimationPart$1.class
 me\sky\cubelets\utils\particle\data\color\ParticleColor.class
 me\sky\cubelets\utils\MinecraftUtils$1.class
 me\sky\cubelets\utils\particle\utils\ReflectionUtils.class
+me\sky\cubelets\cubelet\animation\halloween\list\ChainsEffect.class
 me\sky\cubelets\menus\CubeletMenu.class
 me\sky\cubelets\utils\Laser$1.class
 me\sky\cubelets\commands\CubeCommand.class

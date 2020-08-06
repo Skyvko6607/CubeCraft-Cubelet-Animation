@@ -30,18 +30,19 @@ public class ArcParticle extends CubeletAnimationPart {
     public void update() {
         ParticleEffect.FLAME.display(getCubeletLocation().getLocation(), 1, 0, 1, 0, 3, null, Bukkit.getOnlinePlayers());
         particles.forEach(location -> {
-            RegularColor color = particles.indexOf(location) % 2 == 0 ? new RegularColor(255, 180, 0) : new RegularColor(0, 0, 0);
+            int modulo = particles.indexOf(location) % 2;
+            RegularColor color = modulo == 0? new RegularColor(255, 255, 255) : new RegularColor(0, 0, 0);
             ParticleEffect.REDSTONE.display(location, color, Bukkit.getOnlinePlayers());
         });
-        if (angle > 90) {
+        if (angle > 135) {
             finish();
             return;
         }
         particles.add(getParticleLocation(1, 1));
         particles.add(getParticleLocation(-1, 1));
-        particles.add(getParticleLocation(1, -1));
         particles.add(getParticleLocation(-1, -1));
-        angle += 6;
+        particles.add(getParticleLocation(1, -1));
+        angle += 4;
     }
     @Override
     public void remove() {
@@ -54,11 +55,14 @@ public class ArcParticle extends CubeletAnimationPart {
     }
 
     private Location getParticleLocation(int x, int z) {
-        Location loc = getCubeletLocation().getLocation().clone().add(0, 1, 0);
+        Location loc = getCubeletLocation().getLocation().clone().add(0, 0.5, 0);
         double size = 2.5;
-        loc.setX(loc.getX() + x * (Math.cos(Math.toRadians(angle)) * size));
-        loc.setZ(loc.getZ() + z * (Math.cos(Math.toRadians(angle)) * size));
-        loc.setY(loc.getY() + (Math.sin(Math.toRadians(angle)) * size));
-        return loc;
+        double cos = Math.cos(Math.toRadians(angle)) * size;
+        double tanRot = Math.tan(Math.toRadians(angle / 2.015));
+        double sinRot = Math.tan(Math.toRadians(angle / 2)) / 2;
+        double xVal = x * (cos + tanRot);
+        double yVal = (Math.sin(Math.toRadians(angle)) * (size + 1)) + sinRot;
+        double zVal = z * (cos + tanRot);
+        return loc.add(xVal, yVal, zVal);
     }
 }
